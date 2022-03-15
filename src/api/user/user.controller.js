@@ -51,7 +51,7 @@ const loginUser = async (req, res, next) => {
     }
   } catch (error) {      
     error.message = "error Login";
-    return next(setError(500, "No se ha podido logear"));
+    return next(setError(500, "error in login"));
   }
 };
 
