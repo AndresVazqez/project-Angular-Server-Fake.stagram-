@@ -46,6 +46,7 @@ const getPostById = async (req, res, next) => {
         const postDB = await Post.findById(id).populate("userId", {
             username: 1,
             name: 1,
+            image: 1
            
         })
         if (!postDB) {
