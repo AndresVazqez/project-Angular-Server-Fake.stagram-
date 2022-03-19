@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { connectDb } = require('./src/utils/database/db');
 const UserRoutes = require('./src/api/user/user.routes');
+const PostRoutes = require('./src/api/posts/posts.routes');
 const cloudinary = require('cloudinary').v2;
 
 
@@ -38,6 +39,10 @@ app.use(express.urlencoded({ limit: '5mb', extended: true }))
 
 
 app.use('/api/users', UserRoutes);
+app.use('/api/posts', PostRoutes);
+app.use('/', (req, res, next)=>{
+    return res.json("fakestagram server")
+})
 
 app.use((error, req, res, next) => {
     return res.status(error.status || 500).json(error.message || 'Unexpected error')

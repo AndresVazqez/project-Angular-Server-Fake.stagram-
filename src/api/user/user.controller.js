@@ -33,23 +33,54 @@ const postNewUser = async (req, res, next) => {
   }
 };
 
+const getAllUser = async (req, res, next) => {
+  try {
+    const usersDb = await User.find().populate('posts', {
+      caption: 1,
+      image: 1,
+      date: 1
+    })    
+    res.status(200).json(usersDb)
+  } catch (error) {
+    return next(setError(500, 'Users failed server'))
+  }
+}
+
+const getUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userDb = await User.findById(id).populate('posts', {
+      caption: 1,
+      image: 1,
+      date: 1
+    })
+    if (!userDb) {
+      return next(setError(404, "User not found"));
+    }
+    return res.status(200).json({ userDb: userDb });
+  } catch (error) {
+    return next(setError(404, "User server fail"));
+  }
+};
+
 const loginUser = async (req, res, next) => {
-  try {   
+  try {
 
     const userDb = await User.findOne({ email: req.body.email });
-   
+
     if (!userDb) {
       return next(setError(404, "User not found"));
     }
     if (bcrypt.compareSync(req.body.password, userDb.password)) {
-      
-      const token = generateSign(userDb._id, userDb.email);     
-      return res.status(200).json(token);
+
+      const token = generateSign(userDb._id, userDb.email);
+      console.log(userDb._id)
+      return res.status(200).json({token: token, id: userDb._id });
     }
     if (!bcrypt.compareSync(req.body.password, userDb.password)) {
       return next(setError(404, "invalid password"));
     }
-  } catch (error) {      
+  } catch (error) {
     error.message = "error Login";
     return next(setError(500, "error in login"));
   }
@@ -65,18 +96,7 @@ const logoutUser = (req, res, next) => {
   }
 };
 
-const getUser = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const userDb = await User.findById(id);
-    if (!userDb) {
-      return next(setError(404, "User not found"));
-    }
-    return res.status(200).json({ userDb: userDb });
-  } catch (error) {
-    return next(setError(404, "User server fail"));
-  }
-};
+
 
 const patchUser = async (req, res, next) => {
   try {
@@ -98,4 +118,4 @@ const patchUser = async (req, res, next) => {
   }
 };
 
-module.exports = { postNewUser, loginUser, logoutUser, getUser, patchUser };
+module.exports = { postNewUser, loginUser, logoutUser, getUser, patchUser, getAllUser };

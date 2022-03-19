@@ -1,8 +1,9 @@
 const UserRoutes = require('express').Router();
-const { postNewUser, loginUser, logoutUser, getUser, patchUser } = require('./user.controller');
+const { postNewUser, loginUser, logoutUser, getUser, patchUser, getAllUser } = require('./user.controller');
 const upload = require('../../middlewares/file')
 
 
+UserRoutes.get('/', getAllUser);
 UserRoutes.post('/', upload.single('image'), postNewUser);
 UserRoutes.post('/login', loginUser);
 UserRoutes.post('/logout', logoutUser);

@@ -3,12 +3,15 @@ const bcrypt = require('bcrypt');
 const { validationPassword } = require('../../utils/validators/validators');
 const { setError } = require('../../utils/error/error');
 
+const Schema = mongoose.Schema;
+
 const userSchema = new mongoose.Schema({
         name: { type: String, trim: true, required: true },        
         username: { type: String, trim: true, required: true, unique: true },
         email: { type: String, trim: true, required: true, unique: true},
         password: { type: String, trime: true, required: true },
-        image: {type: String, trim: true }
+        image: {type: String, trim: true },
+        posts: [{ type: Schema.Types.ObjectId, ref: "posts", required: true }]
     },{ timestamps: true }
 );
 
