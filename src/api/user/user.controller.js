@@ -57,7 +57,7 @@ const getUser = async (req, res, next) => {
     if (!userDb) {
       return next(setError(404, "User not found"));
     }
-    return res.status(200).json({ userDb: userDb });
+    return res.status(200).json(userDb);
   } catch (error) {
     return next(setError(404, "User server fail"));
   }
