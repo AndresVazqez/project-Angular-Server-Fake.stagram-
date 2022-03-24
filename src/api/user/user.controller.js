@@ -2,6 +2,7 @@ const User = require("./user.model");
 const bcrypt = require("bcrypt");
 const { setError } = require("../../utils/error/error");
 const { generateSign } = require("../../utils/jwt/jwt");
+const { deleteFile } = require('../../middlewares/delete');
 
 const postNewUser = async (req, res, next) => {
   try {
@@ -101,17 +102,25 @@ const logoutUser = (req, res, next) => {
 const patchUser = async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log(req.body)
     const patchUser = new User(req.body);
     patchUser._id = id;
+    const userBefore = await User.findById( id );   
+    
     if (req.file) {
-      patchUser.img = req.file.path;
-    }
-    console.log(patchUser);
+      patchUser.image = req.file.path;    
+      if(userBefore.image) {       
+        deleteFile(userBefore.image)
+      }      
+    }  
+
+    patchUser.posts = patchUser.posts.concat(userBefore.posts) 
     const userDb = await User.findByIdAndUpdate(id, patchUser);
+    
     if (!userDb) {
       return next(setError(404, "User not found"));
     }
-    // if(userDb.image) deleteFile(userDb.image)
+    console.log("llega hasta aqui")
     return res.status(200).json({ new: patchUser, old: userDb });
   } catch (error) {
     return next(setError(500, "Error patching User"));

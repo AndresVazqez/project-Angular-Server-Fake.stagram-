@@ -1,11 +1,12 @@
 const cloudinary = require('cloudinary').v2
 
 const deleteFile = (imgUrl) => {
-
+ 
     //dividimos la query donde tenga barra
     const imgSplited = imgUrl.split('/')
     //nos quedamos con el último dato para obtener el nombre del archivo 
     const nameSplited = imgSplited[imgSplited.length - 1].split('.')
+  
     //obtenemos el nombre de la carpeta donde se almacenan los archivos  
     const folderSplited = imgSplited[imgSplited.length - 2]
     

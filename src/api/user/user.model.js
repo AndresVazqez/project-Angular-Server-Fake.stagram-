@@ -11,7 +11,13 @@ const userSchema = new mongoose.Schema({
         email: { type: String, trim: true, required: true, unique: true},
         password: { type: String, trime: true, required: true },
         image: {type: String, trim: true },
-        posts: [{ type: Schema.Types.ObjectId, ref: "posts", required: true }]
+        posts: [{ type: Schema.Types.ObjectId, ref: "posts", required: true }],
+        website: {type: String, trim: true },
+        biography: {type: String, trim: true },
+        emailcontact: {type: String, trim: true },
+        telephone: {type: String, trim: true },
+        gender:{type: String, trim: true }
+
     },{ timestamps: true }
 );
 
