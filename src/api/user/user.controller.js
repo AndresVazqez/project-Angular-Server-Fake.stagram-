@@ -7,7 +7,6 @@ const { deleteFile } = require('../../middlewares/delete');
 const postNewUser = async (req, res, next) => {
   try {
     const newUser = new User(req.body);
-
     const emailDuplicate = await User.findOne({ email: newUser.email });
     const userNameDuplicate = await User.findOne({
       username: newUser.username,
@@ -49,13 +48,16 @@ const getAllUser = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const userDb = await User.findById(id).populate('posts', {
-      caption: 1,
-      image: 1,
-      date: 1
-    })
-    if (!userDb) {
+    const { username } = req.params;
+    console.log(req.params)
+
+      const userDb = await User.find({username: { $regex:  username  }}).populate('posts', {
+        caption: 1,
+        image: 1,
+        date: 1
+      })     
+  
+    if (!userDb ) {
       return next(setError(404, "User not found"));
     }
     return res.status(200).json(userDb);
@@ -76,7 +78,7 @@ const loginUser = async (req, res, next) => {
 
       const token = generateSign(userDb._id, userDb.email);
       console.log(userDb._id)
-      return res.status(200).json({token: token, id: userDb._id });
+      return res.status(200).json({token: token, username: userDb.username });
     }
     if (!bcrypt.compareSync(req.body.password, userDb.password)) {
       return next(setError(404, "invalid password"));
@@ -102,6 +104,7 @@ const logoutUser = (req, res, next) => {
 const patchUser = async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log(id)
     console.log(req.body)
     const patchUser = new User(req.body);
     patchUser._id = id;
@@ -112,7 +115,7 @@ const patchUser = async (req, res, next) => {
       if(userBefore.image) {       
         deleteFile(userBefore.image)
       }      
-    }  
+    } 
 
     patchUser.posts = patchUser.posts.concat(userBefore.posts) 
     const userDb = await User.findByIdAndUpdate(id, patchUser);
