@@ -5,7 +5,8 @@ const postSchema = new Schema(
   {
     image: { type: String, required: true, trime: true},
     caption: { type: String},
-    userId: {type: Schema.Types.ObjectId, ref: 'users'}
+    userId: {type: Schema.Types.ObjectId, ref: 'users'},
+    likes: [{type: Schema.Types.ObjectId, ref: 'users'}]
   },
   {
     timestamps: true

@@ -39,6 +39,8 @@ const getAllUser = async (req, res, next) => {
       caption: 1,
       image: 1,
       date: 1
+    }).populate('liked', {     
+      image: 1,      
     })    
     res.status(200).json(usersDb)
   } catch (error) {
@@ -55,6 +57,9 @@ const getUser = async (req, res, next) => {
         caption: 1,
         image: 1,
         date: 1
+      }).populate('liked', {
+        username: 1,
+        image: 1,      
       })     
   
     if (!userDb ) {

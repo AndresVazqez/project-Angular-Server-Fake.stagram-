@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
         image: {type: String, trim: true },
         posts: [{ type: Schema.Types.ObjectId, ref: "posts", required: true }],
         website: {type: String, trim: true },
+        liked: [{ type: Schema.Types.ObjectId, ref: "posts"} ],
         biography: {type: String, trim: true },
         emailcontact: {type: String, trim: true },
         telephone: {type: String, trim: true },
